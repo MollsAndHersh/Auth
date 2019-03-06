@@ -1,0 +1,25 @@
+version: '3.4'
+
+services:
+  authentication.service:
+    image: ${DOCKER_REGISTRY-}authenticationservice
+    build:
+      context: .
+      dockerfile: Authentication.Service/Dockerfile
+    depends_on:
+      - auth.database
+
+  auth.database:
+    container_name: 'auth.database'
+    image: microsoft/mssql-server-linux
+    volumes:
+      - auth-data:/var/lib/db
+    ports:
+      - "1434:1433"
+    environment:
+      SA_PASSWORD: "Password1!"
+      ACCEPT_EULA: "Y"
+
+volumes:
+  auth-data:
+    name: auth-data
