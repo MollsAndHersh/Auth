@@ -7,10 +7,11 @@ This project hosts a solution that creates the following:
      - Connect to Linux @ LocalHost, 1434
      - Username: sa
      - Password: Password1!
+     - The AuthDb database gets created when the container loads for the first time.  The script is written to check for DB/Table existance before attempting to create.
   
 ### Volumes
   1. Data Volume
-     - Database files reside here.
+     - Database files reside here. (Mount point is /var/lib/db on auth.database container)
     
   
 
