@@ -10,8 +10,11 @@ services:
       - auth.database
 
   auth.database:
+    build:
+      context: .
+      dockerfile: Authentication.Service/SeedData/Dockerfile.db
     container_name: 'auth.database'
-    image: microsoft/mssql-server-linux
+    #image: mcr.microsoft.com/mssql/server
     volumes:
       - auth-data:/var/lib/db
     ports:
