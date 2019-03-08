@@ -12,7 +12,7 @@ services:
   auth.database:
     build:
       context: .
-      dockerfile: Authentication.Service/Config/AuthDatabase.Docker/Dockerfile.db
+      dockerfile: Authentication.Service/Config/AuthDatabase.Docker/Dockerfile.AuthDb
     container_name: 'auth.database'
     image: mcr.microsoft.com/mssql/server
     volumes:
