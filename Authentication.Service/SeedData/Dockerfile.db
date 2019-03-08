@@ -1,4 +1,0 @@
-FROM mcr.microsoft.com/mssql/server:2017-latest-ubuntu AS build
-#Copy SQL Script from Host to Container
-COPY ["Authentication.Service/SeedData/CreateAuthDatabase.sql", "/opt/scripts/"]
-

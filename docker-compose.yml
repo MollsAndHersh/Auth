@@ -12,16 +12,13 @@ services:
   auth.database:
     build:
       context: .
-      dockerfile: Authentication.Service/SeedData/Dockerfile.db
+      dockerfile: Authentication.Service/Config/AuthDatabase.Docker/Dockerfile.db
     container_name: 'auth.database'
-    #image: mcr.microsoft.com/mssql/server
+    image: mcr.microsoft.com/mssql/server
     volumes:
       - auth-data:/var/lib/db
     ports:
       - "1434:1433"
-    environment:
-      SA_PASSWORD: "Password1!"
-      ACCEPT_EULA: "Y"
 
 volumes:
   auth-data:
