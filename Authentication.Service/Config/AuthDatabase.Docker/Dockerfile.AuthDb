@@ -3,6 +3,8 @@ ENV SA_PASSWORD=Password1!
 ENV ACCEPT_EULA=Y
 
 #Copy Scripts from Host to Container
+COPY Authentication.Service/Config/AuthDatabase.Docker/AuthDatabaseSeed.sql /opt/scripts/AuthDatabaseSeed.sql
 COPY Authentication.Service/Config/AuthDatabase.Docker/CreateAuthDatabase.sql /opt/scripts/CreateAuthDatabase.sql
 
 RUN (/opt/mssql/bin/sqlservr --accept-eula & ) | grep -q "Service Broker manager has started" && /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P 'Password1!' -d master -i /opt/scripts/CreateAuthDatabase.sql
+#RUN /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P 'Password1!' -d master -i /opt/scripts/AuthDatabaseSeed.sql
