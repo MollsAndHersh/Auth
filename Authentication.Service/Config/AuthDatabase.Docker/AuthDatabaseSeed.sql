@@ -94,3 +94,28 @@ IF NOT EXISTS(SELECT 1 FROM dbo.Clients WHERE ClientId = 'DemoApp')
 				   ,0)
 	END
 GO
+
+-------- Add ClientGrantTypes record to associate 'DemoApp' with Password GrantType --------
+
+DECLARE
+	@clientId int
+
+SELECT 
+	@clientId = Id
+FROM
+	dbo.Clients
+WHERE
+	ClientId = 'DemoApp'
+
+IF NOT EXISTS(SELECT 1 FROM dbo.ClientGrantTypes WHERE clientId = @clientId AND GrantType = 'password')
+	BEGIN
+		PRINT 'Add ClientGrantTypes'
+
+		INSERT INTO [dbo].[ClientGrantTypes]
+           ([GrantType]
+           ,[ClientId])
+			 VALUES
+				   ('password'
+				   ,@clientId)
+	END
+GO

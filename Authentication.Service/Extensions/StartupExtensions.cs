@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using static IdentityModel.OidcConstants;
 
 namespace Authentication.Service.Extensions
 {
@@ -25,7 +26,8 @@ namespace Authentication.Service.Extensions
                     options.ConfigureDbContext = builder =>
                         builder.UseSqlServer(connStr);
                     options.EnableTokenCleanup = true;
-                });
+                })
+                .AddTestUsers(Config.Trash.Config.GetUsers());
 
             return services;
         }
