@@ -13,5 +13,8 @@ This project hosts a solution that creates the following:
   1. Data Volume
      - Database files reside here. (Mount point is /var/lib/db on auth.database container)
     
+    
+### Authentication Service
+  1. Verify working by hitting the URL https://localhost:44355/.well-known/openid-configuration
   
 
