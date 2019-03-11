@@ -23,7 +23,7 @@ namespace Authentication.Service
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-            services.AddIdentityServer4(Configuration);
+                services.AddIdentityServer4(Configuration);
 
             //Configure Autofac
             var container = new ContainerBuilder();
@@ -45,6 +45,7 @@ namespace Authentication.Service
                 app.UseHsts();
             }
 
+            app.UseIdentityServer();
             app.UseHttpsRedirection();
             app.UseMvc();
         }

@@ -13,7 +13,7 @@ namespace Authentication.Service.Extensions
     {
         public static IServiceCollection AddIdentityServer4(this IServiceCollection services, IConfiguration configuration)
         {
-            string connStr = @"Persist Security Info=False;User ID=sa;Password=Password1!;Initial Catalog=AuthDB;Server=localhost,1434";
+            string connStr = @"User ID=sa;Password=Password1!;Initial Catalog=AuthDB;Server=auth.database";
 
             services.AddIdentityServer()
                 .AddConfigurationStore(options =>
@@ -27,6 +27,7 @@ namespace Authentication.Service.Extensions
                         builder.UseSqlServer(connStr);
                     options.EnableTokenCleanup = true;
                 })
+                .AddDeveloperSigningCredential()
                 .AddTestUsers(Config.Trash.Config.GetUsers());
 
             return services;

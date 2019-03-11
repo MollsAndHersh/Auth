@@ -4,15 +4,15 @@ services:
   authentication.service:
     image: ${DOCKER_REGISTRY-}authenticationservice
     build:
-      context: .
-      dockerfile: Authentication.Service/Dockerfile
+      context: ./Authentication.Service
+      dockerfile: Dockerfile
     depends_on:
       - auth.database
 
   auth.database:
     build:
-      context: .
-      dockerfile: Authentication.Service/Config/AuthDatabase.Docker/Dockerfile.AuthDb
+      context: ./Authentication.Service/Config/AuthDatabase.Docker
+      dockerfile: Dockerfile.AuthDb
     container_name: 'auth.database'
     image: mcr.microsoft.com/mssql/server
     volumes:
