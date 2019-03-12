@@ -1,5 +1,7 @@
-﻿using IdentityServer4.Test;
+﻿using IdentityServer4.Models;
+using IdentityServer4.Test;
 using System.Collections.Generic;
+using static IdentityServer4.IdentityServerConstants;
 
 namespace Authentication.Service.Config.Trash
 {
@@ -21,6 +23,35 @@ namespace Authentication.Service.Config.Trash
                     Username = "bob",
                     Password = "password"
                 }
+            };
+        }
+
+        public static IEnumerable<Client> GetClients()
+        {
+            return new List<Client>
+            {
+                // other clients omitted...
+
+                // resource owner password grant client
+                new Client
+                {
+                    ClientId = "ro.client",
+                    AllowedGrantTypes = GrantTypes.ResourceOwnerPassword,
+                    RequireClientSecret = false,
+                    //ClientSecrets =
+                    //{
+                    //    new Secret("secret".Sha256())
+                    //},
+                    AllowedScopes = { "api1" }
+                }
+            };
+        }
+
+        public static IEnumerable<ApiResource> GetApiResources()
+        {
+            return new List<ApiResource>
+            {
+                new ApiResource("api1", "My API")
             };
         }
     }

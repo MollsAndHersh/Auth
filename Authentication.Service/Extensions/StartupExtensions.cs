@@ -16,17 +16,19 @@ namespace Authentication.Service.Extensions
             string connStr = @"User ID=sa;Password=Password1!;Initial Catalog=AuthDB;Server=auth.database";
 
             services.AddIdentityServer()
-                .AddConfigurationStore(options =>
-                {
-                    options.ConfigureDbContext = builder =>
-                        builder.UseSqlServer(connStr);
-                })
-                .AddOperationalStore(options =>
-                {
-                    options.ConfigureDbContext = builder =>
-                        builder.UseSqlServer(connStr);
-                    options.EnableTokenCleanup = true;
-                })
+                //.AddConfigurationStore(options =>
+                //{
+                //    options.ConfigureDbContext = builder =>
+                //        builder.UseSqlServer(connStr);
+                //})
+                //.AddOperationalStore(options =>
+                //{
+                //    options.ConfigureDbContext = builder =>
+                //        builder.UseSqlServer(connStr);
+                //    options.EnableTokenCleanup = true;
+                //})
+                .AddInMemoryApiResources(Config.Trash.Config.GetApiResources())
+                .AddInMemoryClients(Config.Trash.Config.GetClients())
                 .AddDeveloperSigningCredential()
                 .AddTestUsers(Config.Trash.Config.GetUsers());
 
