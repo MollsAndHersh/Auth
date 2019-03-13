@@ -1,102 +1,178 @@
-﻿USE [AuthDB]
-GO
-
--------- Add Client 'DemoApp' --------
+﻿-------- Add Client 'DemoApp' --------
 
 --If database does not exist, create database.
-IF NOT EXISTS(SELECT 1 FROM dbo.Clients WHERE ClientId = 'DemoApp')
+IF NOT EXISTS(SELECT 1 FROM dbo.Clients WHERE ClientId = 'demo.client')
 	BEGIN
 		PRINT 'Add DemoApp Client'
 
 		INSERT INTO [dbo].[Clients]
-				   ([Enabled]
-				   ,[ClientId]
-				   ,[ProtocolType]
-				   ,[RequireClientSecret]
-				   ,[ClientName]
-				   ,[Description]
-				   ,[ClientUri]
-				   ,[LogoUri]
-				   ,[RequireConsent]
+				   ([AbsoluteRefreshTokenLifetime]
+				   ,[AccessTokenLifetime]
+				   ,[AccessTokenType]
+				   ,[AllowAccessTokensViaBrowser]
+				   ,[AllowOfflineAccess]
+				   ,[AllowPlainTextPkce]
 				   ,[AllowRememberConsent]
 				   ,[AlwaysIncludeUserClaimsInIdToken]
-				   ,[RequirePkce]
-				   ,[AllowPlainTextPkce]
-				   ,[AllowAccessTokensViaBrowser]
-				   ,[FrontChannelLogoutUri]
-				   ,[FrontChannelLogoutSessionRequired]
-				   ,[BackChannelLogoutUri]
-				   ,[BackChannelLogoutSessionRequired]
-				   ,[AllowOfflineAccess]
-				   ,[IdentityTokenLifetime]
-				   ,[AccessTokenLifetime]
-				   ,[AuthorizationCodeLifetime]
-				   ,[ConsentLifetime]
-				   ,[AbsoluteRefreshTokenLifetime]
-				   ,[SlidingRefreshTokenLifetime]
-				   ,[RefreshTokenUsage]
-				   ,[UpdateAccessTokenClaimsOnRefresh]
-				   ,[RefreshTokenExpiration]
-				   ,[AccessTokenType]
-				   ,[EnableLocalLogin]
-				   ,[IncludeJwtId]
 				   ,[AlwaysSendClientClaims]
+				   ,[AuthorizationCodeLifetime]
+				   ,[BackChannelLogoutSessionRequired]
+				   ,[BackChannelLogoutUri]
 				   ,[ClientClaimsPrefix]
-				   ,[PairWiseSubjectSalt]
+				   ,[ClientId]
+				   ,[ClientName]
+				   ,[ClientUri]
+				   ,[ConsentLifetime]
 				   ,[Created]
-				   ,[Updated]
-				   ,[LastAccessed]
-				   ,[UserSsoLifetime]
-				   ,[UserCodeType]
+				   ,[Description]
 				   ,[DeviceCodeLifetime]
-				   ,[NonEditable])
+				   ,[EnableLocalLogin]
+				   ,[Enabled]
+				   ,[FrontChannelLogoutSessionRequired]
+				   ,[FrontChannelLogoutUri]
+				   ,[IdentityTokenLifetime]
+				   ,[IncludeJwtId]
+				   ,[LastAccessed]
+				   ,[LogoUri]
+				   ,[NonEditable]
+				   ,[RequireClientSecret]
+				   ,[RequireConsent]
+				   ,[RequirePkce]
+				   ,[PairWiseSubjectSalt]
+				   ,[ProtocolType]
+				   ,[RefreshTokenExpiration]
+				   ,[RefreshTokenUsage]
+				   ,[SlidingRefreshTokenLifetime]
+				   ,[UpdateAccessTokenClaimsOnRefresh]
+				   ,[Updated]
+				   ,[UserCodeType]
+				   ,[UserSsoLifetime])
 			 VALUES
-				   (1
-				   ,'DemoApp'
-				   ,'oidc'
-				   ,0
-				   ,'Demo Application'
-				   ,'This client for authenticating using a Username and Password'
-				   ,NULL
-				   ,NULL
-				   ,0
-				   ,0
-				   ,0
-				   ,0
-				   ,0
-				   ,1
-				   ,NULL
-				   ,1
-				   ,NULL
-				   ,1
-				   ,0
-				   ,300
+				   (2592000
 				   ,3600
+				   ,0
+				   ,0
+				   ,0
+				   ,0
+				   ,1
+				   ,0
+				   ,0
 				   ,300
+				   ,1
 				   ,NULL
-				   ,2592000
-				   ,1296000
-				   ,0
-				   ,1
-				   ,0
-				   ,0
-				   ,0
-				   ,0
-				   ,1
+				   ,'client_'
+				   ,'demo.client'
+				   ,NULL
 				   ,NULL
 				   ,NULL
 				   ,GETDATE()
 				   ,NULL
-				   ,NULL
-				   ,NULL
-				   ,NULL
 				   ,300
-				   ,0)
+				   ,1
+				   ,1
+				   ,1
+				   ,300
+				   ,300
+				   ,0
+				   ,GETDATE()
+				   ,NULL
+				   ,0
+				   ,0
+				   ,1
+				   ,0
+				   ,NULL
+				   ,'oidc'
+				   ,1
+				   ,1
+				   ,1296000
+				   ,0
+				   ,GETDATE()
+				   ,NULL
+				   ,NULL)
 	END
 GO
 
--------- Add ClientGrantTypes record to associate 'DemoApp' with Password GrantType --------
+-------- Add Api Resources --------
+IF NOT EXISTS(SELECT 1 FROM dbo.ApiResources WHERE Name = 'api1')
+	BEGIN
+		INSERT INTO [dbo].[ApiResources]
+				   ([Created]
+				   ,[Description]
+				   ,[DisplayName]
+				   ,[Enabled]
+				   ,[LastAccessed]
+				   ,[Name]
+				   ,[NonEditable]
+				   ,[Updated])
+			 VALUES
+				   (GETDATE()
+				   ,NULL
+				   ,'My API'
+				   ,1
+				   ,GETDATE()
+				   ,'api1'
+				   ,0
+				   ,GETDATE())
+	END
+GO
 
+-------- Add Api Scope --------
+DECLARE
+	@apiResourceName nvarchar(200) = 'api1',
+	@apiResourceId int
+
+SELECT 
+	@apiResourceId = Id
+FROM 
+	dbo.ApiResources
+WHERE
+	Name = @apiResourceName
+
+IF NOT EXISTS(SELECT 1 FROM dbo.ApiScopes WHERE Name = @apiResourceName)
+	BEGIN
+		INSERT INTO [dbo].[ApiScopes]
+				   ([ApiResourceId]
+				   ,[Description]
+				   ,[DisplayName]
+				   ,[Emphasize]
+				   ,[Name]
+				   ,[Required]
+				   ,[ShowInDiscoveryDocument])
+			 VALUES
+				   (@apiResourceId
+				   ,NULL
+				   ,'My API'
+				   ,0
+				   ,@apiResourceName
+				   ,0
+				   ,1)
+		END
+GO
+
+-------- Add Client Scope --------
+DECLARE
+	@apiResourceName nvarchar(200) = 'api1',
+	@clientId int
+
+SELECT 
+	@clientId = Id
+FROM 
+	dbo.Clients
+WHERE
+	ClientId = 'demo.client'
+
+IF NOT EXISTS(SELECT 1 FROM dbo.ClientScopes WHERE ClientId = @clientId AND Scope = @apiResourceName)
+	BEGIN
+		INSERT INTO [dbo].[ClientScopes]
+				   ([ClientId]
+				   ,[Scope])
+			 VALUES
+				   (@clientId
+				   ,@apiResourceName)
+		END
+GO
+
+-------- Add ClientGrantTypes record to associate 'demo.client' with Password GrantType --------
 DECLARE
 	@clientId int
 
@@ -105,7 +181,7 @@ SELECT
 FROM
 	dbo.Clients
 WHERE
-	ClientId = 'DemoApp'
+	ClientId = 'demo.client'
 
 IF NOT EXISTS(SELECT 1 FROM dbo.ClientGrantTypes WHERE clientId = @clientId AND GrantType = 'password')
 	BEGIN

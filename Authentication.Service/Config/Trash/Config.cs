@@ -1,5 +1,6 @@
 ﻿using IdentityServer4.Models;
 using IdentityServer4.Test;
+using System;
 using System.Collections.Generic;
 using static IdentityServer4.IdentityServerConstants;
 
@@ -26,9 +27,10 @@ namespace Authentication.Service.Config.Trash
             };
         }
 
+        [Obsolete("Safe to remove, used for initial dev testing.")]
         public static IEnumerable<Client> GetClients()
         {
-            return new List<Client>
+            var returnValue = new List<Client>
             {
                 // other clients omitted...
 
@@ -45,14 +47,19 @@ namespace Authentication.Service.Config.Trash
                     AllowedScopes = { "api1" }
                 }
             };
+
+            return returnValue;
         }
 
+        [Obsolete("Safe to remove, used for initial dev testing.")]
         public static IEnumerable<ApiResource> GetApiResources()
         {
-            return new List<ApiResource>
+            var returnValue = new List<ApiResource>
             {
                 new ApiResource("api1", "My API")
             };
+
+            return returnValue;
         }
     }
 }
