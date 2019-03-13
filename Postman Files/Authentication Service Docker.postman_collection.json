@@ -1,0 +1,86 @@
+{
+	"info": {
+		"_postman_id": "35e3037b-4112-4fa1-856b-c59d9d6ad149",
+		"name": "Authentication Service Docker",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "IDS - .well-known/openid-configuration",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "https://localhost:44355/.well-known/openid-configuration",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "44355",
+					"path": [
+						".well-known",
+						"openid-configuration"
+					]
+				},
+				"description": "Call to Identity Server 4 configuration endpoint.  This can be used to verify that the service is up and responding."
+			},
+			"response": []
+		},
+		{
+			"name": "Token",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "username",
+							"value": "alice",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "password",
+							"type": "text"
+						},
+						{
+							"key": "grant_type",
+							"value": "password",
+							"type": "text"
+						},
+						{
+							"key": "client_id",
+							"value": "ro.client",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://localhost:44355/connect/token",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "44355",
+					"path": [
+						"connect",
+						"token"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

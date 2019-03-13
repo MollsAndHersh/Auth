@@ -4,14 +4,14 @@ services:
   authentication.service:
     #image: ${DOCKER_REGISTRY-}authenticationservice
     build:
-      context: ./Authentication.Service
+      context: ./src/Authentication.Service
       dockerfile: Dockerfile
     depends_on:
       - auth.database
 
   auth.database:
     build:
-      context: ./Authentication.Service/Config/AuthDatabase.Docker
+      context: ./src/Authentication.Service/Config/AuthDatabase.Docker
       dockerfile: Dockerfile.AuthDb
     container_name: auth.database
     #image: ${DOCKER_REGISTRY-}auth.database
