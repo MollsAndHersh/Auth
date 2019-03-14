@@ -44,7 +44,7 @@ namespace Authentication.Service.Config.Trash
                     //{
                     //    new Secret("secret".Sha256())
                     //},
-                    AllowedScopes = { "api1" }
+                    AllowedScopes = { "api1", "openid" }
                 }
             };
 
@@ -56,7 +56,8 @@ namespace Authentication.Service.Config.Trash
         {
             var returnValue = new List<ApiResource>
             {
-                new ApiResource("api1", "My API")
+                new ApiResource("api1", "My API"),
+                new ApiResource("openid", "OpenId")
             };
 
             return returnValue;

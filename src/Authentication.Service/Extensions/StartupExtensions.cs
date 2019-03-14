@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Authentication.Service.IdentityServer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -22,8 +23,15 @@ namespace Authentication.Service.Extensions
                         builder.UseSqlServer(connStr);
                     options.EnableTokenCleanup = true;
                 })
-                .AddDeveloperSigningCredential()
-                .AddTestUsers(Config.Trash.Config.GetUsers());
+#if InMemory
+                .AddTestUsers(Config.Trash.Config.GetUsers())
+                .AddInMemoryApiResources(Config.Trash.Config.GetApiResources())
+                .AddInMemoryClients(Config.Trash.Config.GetClients())
+#else
+                .AddResourceOwnerValidator<MyResourceOwnerPasswordValidator>()
+                .AddProfileService<MyProfileService>()
+#endif
+                .AddDeveloperSigningCredential();
 
             return services;
         }

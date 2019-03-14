@@ -81,6 +81,40 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "Userinfo",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjI3MDJkMjU0OTQ5MWE5ZTJhZTMzOGM2NmNjMzVkZTdiIiwidHlwIjoiSldUIn0.eyJuYmYiOjE1NTI1MzgzNDIsImV4cCI6MTU1MjU0MTk0MiwiaXNzIjoiaHR0cHM6Ly9sb2NhbGhvc3Q6NDQzNTUiLCJhdWQiOlsiaHR0cHM6Ly9sb2NhbGhvc3Q6NDQzNTUvcmVzb3VyY2VzIiwiYXBpMSJdLCJjbGllbnRfaWQiOiJkZW1vLmNsaWVudCIsInN1YiI6ImFsaWNlIiwiYXV0aF90aW1lIjoxNTUyNTM4MzQyLCJpZHAiOiJsb2NhbCIsInNjb3BlIjpbImFwaTEiLCJvcGVuaWQiXSwiYW1yIjpbIiJdfQ.ocamASvGNAbwLhJwHjf-BrrEiS30uMYy8QJXzNwcOpalsAW1CNd2DahRGSEHAiNwJsFu-0WrXL3ZwOgAoTboUFNixnJMFKPyuvUrWE4qoVWlZETH1krn3ASazSkEdDcHXYuioBwfE4aWE_IzwGNpyVtTfDeGtDEkaiyXOY-4-hp61ISCuZPPhNQKq3e2RoFrhNoRyvQNgR4css59cJYm_QItwaCyxK6EQvOJMyXBa7VkOsoqCpwSsJGxQENcKJCxDQn_d1RuxRYVzHnAa3to9GUXtW3zwq7wb-tXYdseqT2ARhkbgpXbj-IoWjjzJ7X4tAfh2i1Ejq2bXoH6ofFwKg",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://localhost:44355/connect/userinfo",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "44355",
+					"path": [
+						"connect",
+						"userinfo"
+					]
+				}
+			},
+			"response": []
 		}
 	]
 }

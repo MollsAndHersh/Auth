@@ -6,6 +6,11 @@
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <UserSecretsId>f82b8b58-98b9-4465-8609-522abfc9963b</UserSecretsId>
     <DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
+    <Configurations>Debug;Release;InMemory</Configurations>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='InMemory|AnyCPU'">
+    <DefineConstants>TRACE;InMemory</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>

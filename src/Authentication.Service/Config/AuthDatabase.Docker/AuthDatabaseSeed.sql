@@ -92,7 +92,7 @@ IF NOT EXISTS(SELECT 1 FROM dbo.Clients WHERE ClientId = 'demo.client')
 	END
 GO
 
--------- Add Api Resources --------
+-------- Add 'api1' Api Resources --------
 IF NOT EXISTS(SELECT 1 FROM dbo.ApiResources WHERE Name = 'api1')
 	BEGIN
 		INSERT INTO [dbo].[ApiResources]
@@ -116,7 +116,31 @@ IF NOT EXISTS(SELECT 1 FROM dbo.ApiResources WHERE Name = 'api1')
 	END
 GO
 
--------- Add Api Scope --------
+-------- Add 'openid' Api Resources --------
+IF NOT EXISTS(SELECT 1 FROM dbo.ApiResources WHERE Name = 'openid')
+	BEGIN
+		INSERT INTO [dbo].[ApiResources]
+				   ([Created]
+				   ,[Description]
+				   ,[DisplayName]
+				   ,[Enabled]
+				   ,[LastAccessed]
+				   ,[Name]
+				   ,[NonEditable]
+				   ,[Updated])
+			 VALUES
+				   (GETDATE()
+				   ,NULL
+				   ,'OpenId'
+				   ,1
+				   ,GETDATE()
+				   ,'openid'
+				   ,0
+				   ,GETDATE())
+	END
+GO
+
+-------- Add 'api1' Api Scope --------
 DECLARE
 	@apiResourceName nvarchar(200) = 'api1',
 	@apiResourceId int
@@ -149,9 +173,65 @@ IF NOT EXISTS(SELECT 1 FROM dbo.ApiScopes WHERE Name = @apiResourceName)
 		END
 GO
 
--------- Add Client Scope --------
+-------- Add 'openid' Api Scope --------
+DECLARE
+	@apiResourceName nvarchar(200) = 'openid',
+	@apiResourceId int
+
+SELECT 
+	@apiResourceId = Id
+FROM 
+	dbo.ApiResources
+WHERE
+	Name = @apiResourceName
+
+IF NOT EXISTS(SELECT 1 FROM dbo.ApiScopes WHERE Name = @apiResourceName)
+	BEGIN
+		INSERT INTO [dbo].[ApiScopes]
+				   ([ApiResourceId]
+				   ,[Description]
+				   ,[DisplayName]
+				   ,[Emphasize]
+				   ,[Name]
+				   ,[Required]
+				   ,[ShowInDiscoveryDocument])
+			 VALUES
+				   (@apiResourceId
+				   ,NULL
+				   ,'OpenId'
+				   ,0
+				   ,@apiResourceName
+				   ,0
+				   ,1)
+		END
+GO
+
+-------- Add 'api1' Client Scope --------
 DECLARE
 	@apiResourceName nvarchar(200) = 'api1',
+	@clientId int
+
+SELECT 
+	@clientId = Id
+FROM 
+	dbo.Clients
+WHERE
+	ClientId = 'demo.client'
+
+IF NOT EXISTS(SELECT 1 FROM dbo.ClientScopes WHERE ClientId = @clientId AND Scope = @apiResourceName)
+	BEGIN
+		INSERT INTO [dbo].[ClientScopes]
+				   ([ClientId]
+				   ,[Scope])
+			 VALUES
+				   (@clientId
+				   ,@apiResourceName)
+		END
+GO
+
+-------- Add 'openid' Client Scope --------
+DECLARE
+	@apiResourceName nvarchar(200) = 'openid',
 	@clientId int
 
 SELECT 
