@@ -12,6 +12,11 @@ namespace Authentication.Service.Extensions
             string connStr = @"User ID=sa;Password=Password1!;Initial Catalog=AuthDB;Server=auth.database";
 
             services.AddIdentityServer()
+#if InMemory
+                .AddTestUsers(Config.Trash.Config.GetUsers())
+                .AddInMemoryApiResources(Config.Trash.Config.GetApiResources())
+                .AddInMemoryClients(Config.Trash.Config.GetClients())
+#else
                 .AddConfigurationStore(options =>
                 {
                     options.ConfigureDbContext = builder =>
@@ -23,11 +28,6 @@ namespace Authentication.Service.Extensions
                         builder.UseSqlServer(connStr);
                     options.EnableTokenCleanup = true;
                 })
-#if InMemory
-                .AddTestUsers(Config.Trash.Config.GetUsers())
-                .AddInMemoryApiResources(Config.Trash.Config.GetApiResources())
-                .AddInMemoryClients(Config.Trash.Config.GetClients())
-#else
                 .AddResourceOwnerValidator<MyResourceOwnerPasswordValidator>()
                 .AddProfileService<MyProfileService>()
 #endif
