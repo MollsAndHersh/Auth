@@ -17,4 +17,7 @@ This project hosts a solution that creates the following:
 ### Authentication Service
   1. Verify working by hitting the URL https://localhost:44355/.well-known/openid-configuration
   
+## Testing
+Postman files are located in repo to use for testing.
+  
 
