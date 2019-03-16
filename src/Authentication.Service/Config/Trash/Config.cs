@@ -45,6 +45,14 @@ namespace Authentication.Service.Config.Trash
                     //    new Secret("secret".Sha256())
                     //},
                     AllowedScopes = { "api1", "openid" }
+                },
+                new Client  //Client for service to service communication
+                {
+                    ClientId = "service.client",
+                    ClientSecrets = { new Secret("secret".Sha256()) },
+
+                    AllowedGrantTypes = GrantTypes.ClientCredentials,
+                    AllowedScopes = { "api1"}
                 }
             };
 
