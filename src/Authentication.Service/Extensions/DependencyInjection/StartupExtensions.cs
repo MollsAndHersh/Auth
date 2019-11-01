@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Authentication.Service.Extensions
+namespace Authentication.Service.Extensions.DependencyInjection
 {
     public static class StartupExtensions
     {

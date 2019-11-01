@@ -1,4 +1,4 @@
-﻿using Authentication.Service.Extensions;
+﻿using Authentication.Service.Extensions.DependencyInjection;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
