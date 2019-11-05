@@ -2,6 +2,10 @@
   "iisSettings": {
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
+    "iis": {
+      "applicationUrl": "http://localhost/Authentication.Service",
+      "sslPort": 0
+    },
     "iisExpress": {
       "applicationUrl": "http://localhost:59692",
       "sslPort": 44355
@@ -33,6 +37,14 @@
       "httpPort": 59693,
       "useSSL": true,
       "sslPort": 44356
+    },
+    "IIS": {
+      "commandName": "IIS",
+      "launchBrowser": true,
+      "launchUrl": "api/values",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
     }
   }
 }

@@ -1,12 +1,12 @@
-﻿using Authentication.Service.Extensions;
-using Autofac;
-using Autofac.Extensions.DependencyInjection;
+﻿using Authentication.Service.Extensions.DependencyInjection;
+using IdentityModel;
+using idunno.Authentication.Certificate;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System;
+using System.Threading.Tasks;
 
 namespace Authentication.Service
 {
@@ -20,16 +20,30 @@ namespace Authentication.Service
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
-        public IServiceProvider ConfigureServices(IServiceCollection services)
+        public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-                services.AddIdentityServer4(Configuration);
+            services.AddMvc()
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
-            //Configure Autofac
-            var container = new ContainerBuilder();
-            container.Populate(services);
+            services.AddAuthentication()
+                .AddCertificate("x509", options =>
+                {
+                    options.RevocationMode = System.Security.Cryptography.X509Certificates.X509RevocationMode.NoCheck;
 
-            return new AutofacServiceProvider(container.Build());
+                    options.Events = new CertificateAuthenticationEvents
+                    {
+                        OnValidateCertificate = context =>
+                        {
+                            context.Principal = Principal.CreateFromCertificate(context.ClientCertificate, includeAllClaims: true);
+                            context.Success();
+
+                            return Task.CompletedTask;
+                        }
+                    };
+                });
+
+            services.AddIdentityServer4(Configuration);
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
