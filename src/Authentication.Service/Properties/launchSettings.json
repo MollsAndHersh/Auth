@@ -3,7 +3,7 @@
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
     "iis": {
-      "applicationUrl": "http://localhost/Authentication.Service",
+      "applicationUrl": "https://kleptek.com/authentication.service",
       "sslPort": 0
     },
     "iisExpress": {

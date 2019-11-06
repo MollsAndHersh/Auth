@@ -59,6 +59,7 @@ namespace Authentication.Service
                 app.UseHsts();
             }
 
+            app.UseAuthentication();
             app.UseIdentityServer();
             app.UseHttpsRedirection();
             app.UseMvc();

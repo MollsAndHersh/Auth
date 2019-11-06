@@ -11,7 +11,7 @@ namespace Authentication.Client.Mtls
     {
         static void Main(string[] args)
         {
-            var response = RequestTokenAsync();
+            var response = Task.Run(() => RequestTokenAsync()).Result;
         }
 
         static async Task<TokenResponse> RequestTokenAsync()
@@ -22,7 +22,7 @@ namespace Authentication.Client.Mtls
 
             var client = new HttpClient(handler);
 
-            var disco = await client.GetDiscoveryDocumentAsync("https://kleptek.com/Authentication.Service");
+            var disco = await client.GetDiscoveryDocumentAsync("https://kleptek.com/authentication.service");
             if (disco.IsError) 
                 throw new Exception(disco.Error);
 
@@ -33,11 +33,14 @@ namespace Authentication.Client.Mtls
                                 .Value<string>(OidcConstants.Discovery.TokenEndpoint)
                                 .ToString(),
 
-                ClientId = "mtls",
+                ClientId = "mtls.client",
                 Scope = "api1"
             });
 
             if (response.IsError) throw new Exception(response.Error);
+
+            //TODO: COnfigure IIS to Accept Client Certificates.
+
             return response;
         }
     }
