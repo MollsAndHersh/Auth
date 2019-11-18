@@ -115,6 +115,8 @@ IF NOT EXISTS(SELECT 1 FROM dbo.ApiScopes WHERE Name = @apiResourceName)
 GO
 
 
+
+
 -------- Add client demo.client and configure --------
 
 -- Add Client demo.client
@@ -279,6 +281,8 @@ IF NOT EXISTS(SELECT 1 FROM dbo.ClientGrantTypes WHERE clientId = @clientId AND 
 	END
 GO
 
+
+
 -------- Add client for service to service communication configure --------
 IF NOT EXISTS(SELECT 1 FROM dbo.Clients WHERE ClientId = 'service.client')
 	BEGIN
@@ -405,7 +409,7 @@ FROM
 WHERE
 	ClientId = 'service.client'
 
-IF NOT EXISTS(SELECT 1 FROM dbo.ClientGrantTypes WHERE clientId = @clientId AND GrantType = 'password')
+IF NOT EXISTS(SELECT 1 FROM dbo.ClientGrantTypes WHERE clientId = @clientId AND GrantType = 'client_credentials')
 	BEGIN
 		PRINT 'Add ClientGrantTypes'
 
@@ -452,3 +456,351 @@ GO
 
 
 
+
+-------- Add client mtls.client and configure --------
+
+-- Add Client demo.client
+IF NOT EXISTS(SELECT 1 FROM dbo.Clients WHERE ClientId = 'mtls.client')
+	BEGIN
+		PRINT 'Add MTLS Client'
+
+		INSERT INTO [dbo].[Clients]
+				   ([AbsoluteRefreshTokenLifetime]
+				   ,[AccessTokenLifetime]
+				   ,[AccessTokenType]
+				   ,[AllowAccessTokensViaBrowser]
+				   ,[AllowOfflineAccess]
+				   ,[AllowPlainTextPkce]
+				   ,[AllowRememberConsent]
+				   ,[AlwaysIncludeUserClaimsInIdToken]
+				   ,[AlwaysSendClientClaims]
+				   ,[AuthorizationCodeLifetime]
+				   ,[BackChannelLogoutSessionRequired]
+				   ,[BackChannelLogoutUri]
+				   ,[ClientClaimsPrefix]
+				   ,[ClientId]
+				   ,[ClientName]
+				   ,[ClientUri]
+				   ,[ConsentLifetime]
+				   ,[Created]
+				   ,[Description]
+				   ,[DeviceCodeLifetime]
+				   ,[EnableLocalLogin]
+				   ,[Enabled]
+				   ,[FrontChannelLogoutSessionRequired]
+				   ,[FrontChannelLogoutUri]
+				   ,[IdentityTokenLifetime]
+				   ,[IncludeJwtId]
+				   ,[LastAccessed]
+				   ,[LogoUri]
+				   ,[NonEditable]
+				   ,[RequireClientSecret]
+				   ,[RequireConsent]
+				   ,[RequirePkce]
+				   ,[PairWiseSubjectSalt]
+				   ,[ProtocolType]
+				   ,[RefreshTokenExpiration]
+				   ,[RefreshTokenUsage]
+				   ,[SlidingRefreshTokenLifetime]
+				   ,[UpdateAccessTokenClaimsOnRefresh]
+				   ,[Updated]
+				   ,[UserCodeType]
+				   ,[UserSsoLifetime])
+			 VALUES
+				   (2592000
+				   ,3600
+				   ,0
+				   ,0
+				   ,0
+				   ,0
+				   ,1
+				   ,0
+				   ,0
+				   ,300
+				   ,1
+				   ,NULL
+				   ,'client_'
+				   ,'mtls.client'
+				   ,NULL
+				   ,NULL
+				   ,NULL
+				   ,GETDATE()
+				   ,'Client for MTLS communication'
+				   ,300
+				   ,1
+				   ,1
+				   ,1
+				   ,300
+				   ,300
+				   ,0
+				   ,GETDATE()
+				   ,NULL
+				   ,0
+				   ,0
+				   ,1
+				   ,0
+				   ,NULL
+				   ,'oidc'
+				   ,1
+				   ,1
+				   ,1296000
+				   ,0
+				   ,GETDATE()
+				   ,NULL
+				   ,NULL)
+	END
+GO
+
+-------- Add 'api1' Client Scope --------
+DECLARE
+	@apiResourceName nvarchar(200) = 'api1',
+	@clientId int
+
+SELECT 
+	@clientId = Id
+FROM 
+	dbo.Clients
+WHERE
+	ClientId = 'mtls.client'
+
+IF NOT EXISTS(SELECT 1 FROM dbo.ClientScopes WHERE ClientId = @clientId AND Scope = @apiResourceName)
+	BEGIN
+		INSERT INTO [dbo].[ClientScopes]
+				   ([ClientId]
+				   ,[Scope])
+			 VALUES
+				   (@clientId
+				   ,@apiResourceName)
+		END
+GO
+
+-------- Add ClientGrantTypes record to associate 'mtls.client' with Password GrantType --------
+DECLARE
+	@clientId int
+
+SELECT 
+	@clientId = Id
+FROM
+	dbo.Clients
+WHERE
+	ClientId = 'mtls.client'
+
+IF NOT EXISTS(SELECT 1 FROM dbo.ClientGrantTypes WHERE clientId = @clientId AND GrantType = 'client_credentials')
+	BEGIN
+		PRINT 'Add ClientGrantTypes'
+
+		INSERT INTO [dbo].[ClientGrantTypes]
+           ([GrantType]
+           ,[ClientId])
+			 VALUES
+				   ('client_credentials'
+				   ,@clientId)
+	END
+GO
+
+-------- Add ClientSecret record for Service.Client --------
+
+DECLARE
+	@clientId int
+
+SELECT 
+	@clientId = Id
+FROM
+	dbo.Clients
+WHERE
+	ClientId = 'mtls.client'
+
+IF NOT EXISTS(SELECT 1 FROM dbo.ClientSecrets WHERE clientId = @clientId)
+	BEGIN
+		INSERT INTO [dbo].[ClientSecrets]
+				   ([ClientId]
+				   ,[Created]
+				   ,[Description]
+				   ,[Expiration]
+				   ,[Type]
+				   ,[Value])
+			 VALUES
+				   (@clientId
+				   ,GetDate()
+				   ,'The value of the MTLS Thumbprint'
+				   ,NULL
+				   ,'X509Thumbprint'
+				   ,'bd63b996824714d80a343ea0c794ccc558e0eeb9')
+	END
+GO
+
+
+
+
+
+-------- Add client mtls.client2 and configure --------
+
+-- Add Client demo.client
+IF NOT EXISTS(SELECT 1 FROM dbo.Clients WHERE ClientId = 'mtls.client2')
+	BEGIN
+		PRINT 'Add MTLS Client 2'
+
+		INSERT INTO [dbo].[Clients]
+				   ([AbsoluteRefreshTokenLifetime]
+				   ,[AccessTokenLifetime]
+				   ,[AccessTokenType]
+				   ,[AllowAccessTokensViaBrowser]
+				   ,[AllowOfflineAccess]
+				   ,[AllowPlainTextPkce]
+				   ,[AllowRememberConsent]
+				   ,[AlwaysIncludeUserClaimsInIdToken]
+				   ,[AlwaysSendClientClaims]
+				   ,[AuthorizationCodeLifetime]
+				   ,[BackChannelLogoutSessionRequired]
+				   ,[BackChannelLogoutUri]
+				   ,[ClientClaimsPrefix]
+				   ,[ClientId]
+				   ,[ClientName]
+				   ,[ClientUri]
+				   ,[ConsentLifetime]
+				   ,[Created]
+				   ,[Description]
+				   ,[DeviceCodeLifetime]
+				   ,[EnableLocalLogin]
+				   ,[Enabled]
+				   ,[FrontChannelLogoutSessionRequired]
+				   ,[FrontChannelLogoutUri]
+				   ,[IdentityTokenLifetime]
+				   ,[IncludeJwtId]
+				   ,[LastAccessed]
+				   ,[LogoUri]
+				   ,[NonEditable]
+				   ,[RequireClientSecret]
+				   ,[RequireConsent]
+				   ,[RequirePkce]
+				   ,[PairWiseSubjectSalt]
+				   ,[ProtocolType]
+				   ,[RefreshTokenExpiration]
+				   ,[RefreshTokenUsage]
+				   ,[SlidingRefreshTokenLifetime]
+				   ,[UpdateAccessTokenClaimsOnRefresh]
+				   ,[Updated]
+				   ,[UserCodeType]
+				   ,[UserSsoLifetime])
+			 VALUES
+				   (2592000
+				   ,3600
+				   ,0
+				   ,0
+				   ,0
+				   ,0
+				   ,1
+				   ,0
+				   ,0
+				   ,300
+				   ,1
+				   ,NULL
+				   ,'client_'
+				   ,'mtls.client2'
+				   ,NULL
+				   ,NULL
+				   ,NULL
+				   ,GETDATE()
+				   ,'Second Client for MTLS communication'
+				   ,300
+				   ,1
+				   ,1
+				   ,1
+				   ,300
+				   ,300
+				   ,0
+				   ,GETDATE()
+				   ,NULL
+				   ,0
+				   ,0
+				   ,1
+				   ,0
+				   ,NULL
+				   ,'oidc'
+				   ,1
+				   ,1
+				   ,1296000
+				   ,0
+				   ,GETDATE()
+				   ,NULL
+				   ,NULL)
+	END
+GO
+
+-------- Add 'api1' Client Scope --------
+DECLARE
+	@apiResourceName nvarchar(200) = 'api1',
+	@clientId int
+
+SELECT 
+	@clientId = Id
+FROM 
+	dbo.Clients
+WHERE
+	ClientId = 'mtls.client2'
+
+IF NOT EXISTS(SELECT 1 FROM dbo.ClientScopes WHERE ClientId = @clientId AND Scope = @apiResourceName)
+	BEGIN
+		INSERT INTO [dbo].[ClientScopes]
+				   ([ClientId]
+				   ,[Scope])
+			 VALUES
+				   (@clientId
+				   ,@apiResourceName)
+		END
+GO
+
+-------- Add ClientGrantTypes record to associate 'mtls.client2' with Password GrantType --------
+DECLARE
+	@clientId int
+
+SELECT 
+	@clientId = Id
+FROM
+	dbo.Clients
+WHERE
+	ClientId = 'mtls.client2'
+
+IF NOT EXISTS(SELECT 1 FROM dbo.ClientGrantTypes WHERE clientId = @clientId AND GrantType = 'client_credentials')
+	BEGIN
+		PRINT 'Add ClientGrantTypes'
+
+		INSERT INTO [dbo].[ClientGrantTypes]
+           ([GrantType]
+           ,[ClientId])
+			 VALUES
+				   ('client_credentials'
+				   ,@clientId)
+	END
+GO
+
+-------- Add ClientSecret record for Service.Client --------
+
+DECLARE
+	@clientId int
+
+SELECT 
+	@clientId = Id
+FROM
+	dbo.Clients
+WHERE
+	ClientId = 'mtls.client2'
+
+IF NOT EXISTS(SELECT 1 FROM dbo.ClientSecrets WHERE clientId = @clientId)
+	BEGIN
+		INSERT INTO [dbo].[ClientSecrets]
+				   ([ClientId]
+				   ,[Created]
+				   ,[Description]
+				   ,[Expiration]
+				   ,[Type]
+				   ,[Value])
+			 VALUES
+				   (@clientId
+				   ,GetDate()
+				   ,'The value of the MTLS Thumbprint (Client2)'
+				   ,NULL
+				   ,'X509Thumbprint'
+				   ,'d1eb23a46d17d68fd92564c2f1f1601764d8e349')
+	END
+GO

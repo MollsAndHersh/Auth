@@ -17,7 +17,7 @@ namespace Authentication.Client.Mtls
         static async Task<TokenResponse> RequestTokenAsync()
         {
             var handler = new HttpClientHandler();
-            var cert = X509.LocalMachine.My.Thumbprint.Find("bd63b996824714d80a343ea0c794ccc558e0eeb9").Single();
+            var cert = X509.LocalMachine.My.Thumbprint.Find("5af01afff10404da133926b27784df2c16b4cec1").Single();
             handler.ClientCertificates.Add(cert);
 
             var client = new HttpClient(handler);
@@ -33,8 +33,9 @@ namespace Authentication.Client.Mtls
                                 .Value<string>(OidcConstants.Discovery.TokenEndpoint)
                                 .ToString(),
 
-                ClientId = "mtls.client",
-                Scope = "api1"
+                ClientId = "mtls.client2"
+                
+                //Scope = "api2"
             });
 
             if (response.IsError) throw new Exception(response.Error);

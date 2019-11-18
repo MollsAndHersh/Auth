@@ -34,7 +34,9 @@ namespace Authentication.Service
                     {
                         OnValidateCertificate = context =>
                         {
-                            context.Principal = Principal.CreateFromCertificate(context.ClientCertificate, includeAllClaims: true);
+                            context.Principal = Principal.Create("X.509", new System.Security.Claims.Claim("Test", "Value"));
+
+                            //context.Principal = Principal.CreateFromCertificate(context.ClientCertificate, includeAllClaims: true);
                             context.Success();
 
                             return Task.CompletedTask;
